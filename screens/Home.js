@@ -50,7 +50,8 @@ const styles = {
   logoText: {
     fontSize: 35,
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '600',
+    position: 'absolute',
     marginTop: 5,
     left: 10,
     // textAlign: 'center',
@@ -61,7 +62,7 @@ const styles = {
     backgroundColor: 'white',
     borderRadius: 35,
     alignSelf: 'center',
-    top: '20%',
+    top: '30%',
     // marginTop: 20,
   },
   searchIcon: {

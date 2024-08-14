@@ -1,0 +1,1 @@
+APIPath:'https://api.edamam.com/doc/open-api/recipe-search-v2',
