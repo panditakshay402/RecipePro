@@ -44,12 +44,12 @@ export const DIET_FILTERS = [
     'wheat-free',
   ];
   export const MEAL_FILTERS = [
-    {title: 'breakfast', icon: require('./images/breakfast.png')},
-    {title: 'brunch', icon: require('./images/brunch.png')},
-    {title: 'lunch', icon: require('./images/lunch.png')},
-    {title: 'dinner', icon: require('./images/dinner.png')},
-    {title: 'snack', icon: require('./images/snack.png')},
-    {title: 'teatime', icon: require('./images/tea.png')},
+    {title: 'breakfast', icon: require('../assets/images/breakfast.png')},
+    {title: 'brunch', icon: require('../assets/images/brunch.png')},
+    {title: 'lunch', icon: require('../assets/images/lunch.png')},
+    {title: 'dinner', icon: require('../assets/images/dinner.png')},
+    {title: 'snack', icon: require('../assets/images/snack.png')},
+    {title: 'teatime', icon: require('../assets/images/tea.png')},
   ];
   
   export const DISH_FILTERS = [
