@@ -1,11 +1,46 @@
 import {View, Text, StatusBar, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image} from 'react-native-animatable';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { FlatList } from 'react-native-gesture-handler';
-import { MEAL_FILTERS } from './Data';
+import {FlatList} from 'react-native-gesture-handler';
+import {MEAL_FILTERS} from './Data';
+import Keys from './Keys';
+
+const {app_ID, app_KEY} = Keys;
 
 const Home = () => {
+  const [recipes, setRecipes] = useState([]);
+  useEffect(() => {
+    getTrendyRecipes();
+    console.log('Home Screen');
+  }, []);
+
+  const getTrendyRecipes = () => {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    const apiUrl = `https://api.edamam.com/api/recipes/v2?type=public&q=food&app_id=${app_ID}&app_key=${app_KEY}`;
+    console.log('API URL:', apiUrl);
+
+    fetch(apiUrl, requestOptions)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(result => {
+        console.log('Result:', result.hits);
+        setRecipes(result.hits);
+      })
+      .catch(error => console.error('Fetch error:', error));
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'light-content'} />
@@ -25,22 +60,48 @@ const Home = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.categoryText}>Categories</Text> 
+      <Text style={styles.categoryText}>Categories</Text>
       <View style={styles.lowerView}>
-      <FlatList horizontal showsHorizontalScrollIndicator={false} data={MEAL_FILTERS} renderItem={({item,index})=>{
-        return(
-          <TouchableOpacity style={styles.catogaryItem}>
-            <View style={styles.card}>
-              <Image source={item.icon} style={styles.categoryIcons}/>
-            </View>
-            <Text style={styles.flatlistTitle}>{item.title}</Text>
-          </TouchableOpacity>
-        );
-      }}/>
-      </View>  
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={MEAL_FILTERS}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity activeOpacity={0.7} style={styles.catogaryItem}>
+                <View style={styles.card}>
+                  <Image source={item.icon} style={styles.categoryIcons} />
+                </View>
+                <Text style={styles.flatlistTitle}>{item.title}</Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
+      <Text style={styles.categoryText}>Trendy Recipes</Text>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={recipes}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity activeOpacity={0.7} style={styles.recipeItem}>
+              <Image
+                source={{uri: item.recipe.image}}
+                style={styles.recipeImage}
+              />
+
+              <View style={[styles.transparentView, {borderRadius: 15}]}>
+                <Text style={styles.recipeLabel}>{item.recipe.label}</Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
     </View>
   );
 };
+
 const styles = {
   container: {
     flex: 1,
@@ -69,7 +130,6 @@ const styles = {
     position: 'absolute',
     marginTop: 5,
     left: 10,
-    // textAlign: 'center',
   },
   searchBar: {
     width: '90%',
@@ -78,7 +138,6 @@ const styles = {
     borderRadius: 35,
     alignSelf: 'center',
     top: '30%',
-    // marginTop: 20,
   },
   searchIcon: {
     width: 32,
@@ -94,28 +153,23 @@ const styles = {
     fontSize: 16,
     top: 12,
     left: 50,
-    Colors: 'grey',
+    color: 'grey', // Corrected from "Colors" to "color"
   },
-  categoryText:{
+  categoryText: {
     fontSize: 20,
     fontWeight: '600',
     color: 'black',
     margin: 10,
   },
 
-  catogaryItem:{
+  catogaryItem: {
     width: 120,
     height: 120,
-    // backgroundColor: 'white',
-    // borderRadius: 15,
-    // shadowColor: 'rgba(0,0,0,0.4)',
-    // shadowOpacity: 10,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 8,
-  
   },
-  card:{
+  card: {
     width: '80%',
     height: '70%',
     backgroundColor: 'white',
@@ -123,17 +177,39 @@ const styles = {
     shadowOpacity: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius  : 10,
+    borderRadius: 10,
   },
-  categoryIcons:{
+  categoryIcons: {
     width: 60,
     height: 60,
   },
-  flatlistTitle:{
+  flatlistTitle: {
     alignSelf: 'center',
-    marginTop: 10 ,
+    marginTop: 10,
     fontSize: 18,
     fontWeight: '600',
+  },
+
+  recipeItem: {
+    width: 180,
+    height: 220,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    marginLeft: 20,
+    borderRadius: 10,
+  },
+  recipeImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+  },
+  recipeLabel: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: '600',
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
 };
 
