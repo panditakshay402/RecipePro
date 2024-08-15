@@ -4,10 +4,13 @@ import {Image} from 'react-native-animatable';
 import {FlatList} from 'react-native-gesture-handler';
 import {MEAL_FILTERS} from './Data';
 import Keys from './Keys';
+import {useNavigation} from '@react-navigation/native';
 
 const {app_ID, app_KEY} = Keys;
 
 const Home = () => {
+
+  const navigation = useNavigation();
   const [recipes, setRecipes] = useState([]);
   useEffect(() => {
     getTrendyRecipes();
@@ -85,7 +88,9 @@ const Home = () => {
         data={recipes}
         renderItem={({item, index}) => {
           return (
-            <TouchableOpacity activeOpacity={0.7} style={styles.recipeItem}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.recipeItem} onPress={() =>
+              navigation.navigate('Details', {recipe: item.recipe})
+            } >
               <Image
                 source={{uri: item.recipe.image}}
                 style={styles.recipeImage}
