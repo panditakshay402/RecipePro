@@ -1,4 +1,4 @@
-## Requirement:
+# Requirement:
 ``` npm i react-native-modal react-native-animatable react-native-gesture-handler ```
 
 
